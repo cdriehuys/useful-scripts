@@ -1,7 +1,8 @@
-# Ignore vendor scripts
-bumpversion
-fuck
-thefuck
-thefuck-alias
-virtualenv
+# Default to ignoring everything. This allows for easier integration in
+# directories where vendor scripts are automatically installed.
+*
+
+# Specifically include custom scripts
+!autopytest
+!create-python-project
 
