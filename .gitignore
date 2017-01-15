@@ -1,0 +1,7 @@
+# Ignore vendor scripts
+bumpversion
+fuck
+thefuck
+thefuck-alias
+virtualenv
+

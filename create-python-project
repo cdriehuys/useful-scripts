@@ -1,0 +1,57 @@
+#! /bin/bash
+
+ENV_NAME='env'
+PYTHON_NAME='python3'
+
+project_name=$1
+
+
+function configure_sublime() {
+    env_dir=$(readlink -f $project_name/$ENV_NAME)
+    python_bin="$env_dir/bin/python"
+    site_packages=`"$python_bin" -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib())"`
+
+    cat > "$project_name/$project_name.sublime-project" <<EOF
+{
+    "codeintel_settings": {
+        "codeintel_language_settings": {
+            "Python": {
+                "python": "$python_bin",
+                "pythonExtraPaths": [
+                    "$site_packages"
+                ]
+            }
+        }
+    },
+    "folders": [
+        {
+            "path": "."
+        }
+    ]
+}
+EOF
+}
+
+
+function make_env() {
+    virtualenv --python="$PYTHON_NAME" "$project_name/$ENV_NAME"
+}
+
+
+if [ -z $project_name ]; then
+    echo "Usage: pyproject project-name"
+    exit 1
+else
+    echo "Creating project '$project_name'"
+fi
+
+if [ ! -d $project_name ]; then
+    mkdir $project_name
+fi
+
+make_env
+configure_sublime
+
+cd $project_name
+
+source $ENV_NAME/bin/activate
